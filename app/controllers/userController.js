@@ -10,6 +10,7 @@ const Weatherforecast = require("../models/Weatherforecast");
 const bcryptService = require("../services/bcrypt.service");
 const authService = require("../services/auth.service");
 const componentsService = require("../services/components.service");
+const Todoelement = require("../models/Todoelement");
 
 const UserController = () => {
   const register = async (req, res) => {
@@ -116,15 +117,81 @@ const UserController = () => {
       }
     }
   };
+
+  const editProfile = async (req, res) => {
+    const { body } = req;
+    const user = await User.findByPk(body.id);
+    if (!!body.fullname) {
+      user.update({
+        fullname: body.fullname,
+        avatar: body.avatar,
+      });
+      res.status(200).json(user);
+    }
+
+    if (!!body.email) {
+      if (bcryptService().comparePassword(body.password, user.password)) {
+        user.update({
+          email: body.email,
+        });
+        res.status(200).json(user);
+      } else {
+        res.status(400).json("incorrect password");
+      }
+    }
+
+    if (!!body.newPassword) {
+      if (bcryptService().comparePassword(body.oldPassword, user.password)) {
+        user.update({
+          password: body.newPassword,
+        });
+        res.status(200).json(user);
+      } else {
+        res.status(400).json("incorrect password");
+      }
+    }
+    if (!!body.timeformat) {
+      user.update({
+        timeformat: body.timeformat,
+      });
+      res.status(200).json(user);
+    }
+    if (!!body.unit) {
+      user.update({
+        unit: body.unit,
+      });
+      res.status(200).json(user);
+    }
+  };
+
   const getComponents = async (req, res) => {
-    const { userId } = req.params;
-    const components = await componentsService().getComponentsByUser(userId);
+    const { userid } = req.query;
+    const components = await componentsService().getComponentsByUser(userid);
     res.status(200).json(components);
   };
+  const getActiveComponents = async (req, res) => {
+    const { userid } = req.query;
+    const components = (
+      await componentsService().getComponentsByUser(userid)
+    ).filter((el) => !!el.active);
+
+    res.status(200).json(components);
+  };
+  const test = async (req, res) => {
+    const todo = await Todo.findOne({ where: { userid: 11 } });
+    const todoelements = await Todoelement.findAll({
+      where: { todoid: todo.id },
+    });
+    res.status(200).json(todoelements);
+  };
+
   return {
     register,
     login,
+    editProfile,
     getComponents,
+    getActiveComponents,
+    test,
   };
 };
 module.exports = UserController;
