@@ -25,17 +25,30 @@ const TodoController = () => {
       res.status(400).json("bad request: user not found");
     }
   };
+  const updateTodo = async (req, res) => {
+    const { body } = req;
+    try {
+      console.log(body);
+      const todo = await Todo.findByPk(body.id);
+
+      await todo.update({
+        periodicity: body.periodicity,
+        active: body.active,
+      });
+      res.status(200).json(todo);
+    } catch (e) {
+      res.status(400).json("bad request: user not found");
+    }
+  };
 
   const addtodoElement = async (req, res) => {
     const { body } = req;
     try {
-      const todo = await Todo.findOne({ where: { userid: body.userid } });
-
       const todoelement = await Todoelement.create({
         name: body.name,
         deadline: body.deadline,
         done: false,
-        todoid: todo.id,
+        id: body.id,
       });
       res.status(200).json(todoelement);
     } catch (e) {
@@ -64,6 +77,7 @@ const TodoController = () => {
   return {
     getTodoListByUser,
     getTodoByUser,
+    updateTodo,
     addtodoElement,
     updatetodoElement,
   };

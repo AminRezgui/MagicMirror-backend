@@ -5,6 +5,7 @@ const Clock = require("../models/Clock");
 const Complements = require("../models/Complements");
 const Newsfeed = require("../models/Newsfeed");
 const Todo = require("../models/Todo");
+const Calendar = require("../models/Calendar");
 const Weather = require("../models/Weather");
 const Weatherforecast = require("../models/Weatherforecast");
 const bcryptService = require("../services/bcrypt.service");
@@ -47,37 +48,44 @@ const UserController = () => {
           userid: id_user,
         });
         await Complements.create({
-          name: "Complements",
-          position: "",
+          name: "Compliments",
+          position: "top_left",
+          active: false,
+          userid: id_user,
+        });
+        await Calendar.create({
+          name: "Calendar",
+          position: "bottom_right",
+          country: "Tunis",
           active: true,
           userid: id_user,
         });
         await Newsfeed.create({
-          name: "Newsfeed",
+          name: "News feed",
           position: "",
           active: true,
           showdescription: true,
           userid: id_user,
         });
         await Todo.create({
-          name: "Todo list",
-          position: "",
+          name: "Todo List",
+          position: "top_right",
           active: true,
           periodicity: 1,
           userid: id_user,
         });
         await Weather.create({
           name: "Weather",
-          position: "",
+          position: "middle_left",
           active: true,
-          location: "...",
+          location: "Arian, Tunisia", //body.location
           userid: id_user,
         });
         await Weatherforecast.create({
-          name: "Weather",
-          position: "",
-          active: true,
-          location: "...",
+          name: "Forecast",
+          position: "middle_right",
+          active: false,
+          location: "Ariana, Tunisia", //body.position
           numberofdayes: 3,
           colored: true,
           userid: id_user,
@@ -111,7 +119,7 @@ const UserController = () => {
           const token = authService().issue({ id: user.id });
           return res.status(200).json({ token, user });
         }
-        return res.status(500).json("internal error 22");
+        return res.status(500).json("internal error ");
       } catch (error) {
         console.log(error);
       }
@@ -169,6 +177,7 @@ const UserController = () => {
     const components = await componentsService().getComponentsByUser(userid);
     res.status(200).json(components);
   };
+
   const getActiveComponents = async (req, res) => {
     const { userid } = req.query;
     const components = (

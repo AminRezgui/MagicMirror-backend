@@ -23,6 +23,7 @@ app.use(
   })
 );
 app.use("/public", mappedOpenRoutes);
+
 app.use("/private", mappedPrivateRoutes);
 app.get("/ping", function (req, res) {
   res.status(200).send("pong");
