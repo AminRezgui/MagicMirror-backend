@@ -1,4 +1,7 @@
+const { Op } = require("sequelize");
+const Feed = require("../models/Feed");
 const Newsfeed = require("../models/Newsfeed");
+const Newsfeed_Feed = require("../models/Newsfeed_Feed");
 
 const NewsfeedController = () => {
   const getNewsfeedByUser = async (req, res) => {
@@ -29,9 +32,29 @@ const NewsfeedController = () => {
     }
   };
 
+  const feedList = async (req, res) => {
+    const { query } = req;
+    var newsfeed = await Newsfeed.findOne({ where: { userid: query.userid } });
+    try {
+      var feedIds = await Newsfeed_Feed.findAll({
+        attributes: ["feedid"],
+        where: { newsfeedid: newsfeed.id },
+      });
+      feedIds = feedIds.map((el) => el.feedid);
+      var feeds = await Feed.findAll({
+        where: { id: { [Op.in]: feedIds } },
+      });
+
+      res.status(200).json(feeds);
+    } catch (e) {
+      res.status(400).json(e);
+    }
+  };
+
   return {
     getNewsfeedByUser,
     updateNewsfeed,
+    feedList,
   };
 };
 

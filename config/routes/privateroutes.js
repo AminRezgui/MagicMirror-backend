@@ -2,6 +2,7 @@ const privateRoutes = {
   /*--------------------UserController-------------------- */
   "GET /getcomponents": "UserController.getComponents",
   "GET /getactivecomponents": "UserController.getActiveComponents",
+  "GET /updatepositions": "UserController.updatePositions",
   "PUT /editProfile": "UserController.editProfile",
   "GET /test": "UserController.test",
 
@@ -12,6 +13,7 @@ const privateRoutes = {
   /*--------------------NewsfeedController-------------------- */
   "GET /getnewsfeed": "NewsfeedController.getNewsfeedByUser",
   "PUT /updatenewsfeed": "NewsfeedController.updateNewsfeed",
+  "GET /getfeedList": "NewsfeedController.feedList",
 
   /*--------------------CalendarController-------------------- */
   "GET /getcalendar": "CalendarController.getCalendarByUser",

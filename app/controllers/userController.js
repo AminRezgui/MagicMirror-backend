@@ -12,6 +12,8 @@ const bcryptService = require("../services/bcrypt.service");
 const authService = require("../services/auth.service");
 const componentsService = require("../services/components.service");
 const Todoelement = require("../models/Todoelement");
+const Newsfeed_Feed = require("../models/Newsfeed_Feed");
+const Feed = require("../models/Feed");
 
 const UserController = () => {
   const register = async (req, res) => {
@@ -27,7 +29,7 @@ const UserController = () => {
       },
     });
     if (userExist)
-      return res.status(203).json("The email is already registered.");
+      return res.status(203).json("username or email is already registered.");
     try {
       const user = await User.create({
         username: body.username,
@@ -61,7 +63,7 @@ const UserController = () => {
           userid: id_user,
         });
         await Newsfeed.create({
-          name: "News feed",
+          name: "News Feed",
           position: "",
           active: true,
           showdescription: true,
@@ -101,7 +103,7 @@ const UserController = () => {
   const login = async (req, res) => {
     const { identifier, password } = req.body;
     const { error } = userValidation.loginValidation(req.body);
-    if (error) return res.status(400).json(error);
+    //if (error) return res.status(400).json(error);
     if (identifier && password) {
       try {
         const user = await User.findOne({
@@ -186,12 +188,89 @@ const UserController = () => {
 
     res.status(200).json(components);
   };
+  const updatePositions = async (req, res) => {
+    const { body } = req;
+    for (c in body) {
+      switch (c.nom) {
+        case "Clock":
+          {
+            await Clock.update(
+              { where: { id: c.id } },
+              { position: c.postion }
+            );
+          }
+          break;
+        case "Compliments":
+          {
+            await Complements.update(
+              { where: { id: c.id } },
+              { position: c.postion }
+            );
+          }
+          break;
+        case "Calendar":
+          {
+            await Calendar.update(
+              { where: { id: c.id } },
+              { position: c.postion }
+            );
+          }
+          break;
+        case "News feed":
+          {
+            await Newsfeed.update(
+              { where: { id: c.id } },
+              { position: c.postion }
+            );
+          }
+          break;
+        case "Todo List":
+          {
+            await Todo.update({ where: { id: c.id } }, { position: c.postion });
+          }
+          break;
+        case "Weather":
+          {
+            await Weather.update(
+              { where: { id: c.id } },
+              { position: c.postion }
+            );
+          }
+          break;
+        case "Forecast":
+          {
+            await Weatherforecast.update(
+              { where: { id: c.id } },
+              { position: c.postion }
+            );
+          }
+          break;
+
+        default:
+          console.log("nom ma l9ahouch");
+      }
+    }
+
+    res.status(200).json(components);
+  };
   const test = async (req, res) => {
-    const todo = await Todo.findOne({ where: { userid: 11 } });
-    const todoelements = await Todoelement.findAll({
-      where: { todoid: todo.id },
-    });
-    res.status(200).json(todoelements);
+    var newsfeed = await Newsfeed.findOne({ where: { userid: 11 } });
+    try {
+      var feedIds = await Newsfeed_Feed.findAll({
+        attributes: ["feedid"],
+        where: { newsfeedid: newsfeed.id },
+      });
+      console.log(feedIds[0].feedid);
+      feedIds = feedIds.map((el) => el.feedid);
+      console.log(feedIds);
+      var feeds = await Feed.findAll({
+        where: { id: { [Op.in]: feedIds } },
+      });
+
+      res.status(200).json(feeds);
+    } catch (e) {
+      res.status(400).json(e);
+    }
   };
 
   return {
@@ -200,6 +279,7 @@ const UserController = () => {
     editProfile,
     getComponents,
     getActiveComponents,
+    updatePositions,
     test,
   };
 };
