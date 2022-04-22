@@ -48,7 +48,7 @@ const TodoController = () => {
         name: body.name,
         deadline: body.deadline,
         done: false,
-        id: body.id,
+        id: body.todoid,
       });
       res.status(200).json(todoelement);
     } catch (e) {
