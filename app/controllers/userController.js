@@ -11,9 +11,9 @@ const Weatherforecast = require("../models/Weatherforecast");
 const bcryptService = require("../services/bcrypt.service");
 const authService = require("../services/auth.service");
 const componentsService = require("../services/components.service");
-const Todoelement = require("../models/Todoelement");
 const Newsfeed_Feed = require("../models/Newsfeed_Feed");
 const Feed = require("../models/Feed");
+const jwt_decode = require("jwt-decode");
 
 const UserController = () => {
   const register = async (req, res) => {
@@ -99,7 +99,21 @@ const UserController = () => {
       return res.status(500).json({ msg: "Internal server error" });
     }
   };
-
+  const refreshLogin = async (req, res) => {
+    const { token } = req.body;
+    const decoded = jwt_decode(token);
+    console.log(decoded);
+    try {
+      const user = await User.findByPk(decoded.id);
+      if (!user) {
+        res.status(400).json("user not found");
+      } else {
+        return res.status(200).json({ token, user });
+      }
+    } catch (e) {
+      res.status(500).json("Internal server error");
+    }
+  };
   const login = async (req, res) => {
     const { identifier, password } = req.body;
     const { error } = userValidation.loginValidation(req.body);
@@ -190,58 +204,62 @@ const UserController = () => {
   };
   const updatePositions = async (req, res) => {
     const { body } = req;
-    for (c in body) {
-      switch (c.nom) {
+    for (i in body) {
+      var c = body[i];
+      switch (c.name) {
         case "Clock":
           {
             await Clock.update(
-              { where: { id: c.id } },
-              { position: c.postion }
+              { position: c.position },
+              { where: { id: c.id } }
             );
           }
           break;
         case "Compliments":
           {
             await Complements.update(
-              { where: { id: c.id } },
-              { position: c.postion }
+              { position: c.position },
+              { where: { id: c.id } }
             );
           }
           break;
         case "Calendar":
           {
             await Calendar.update(
-              { where: { id: c.id } },
-              { position: c.postion }
+              { position: c.position },
+              { where: { id: c.id } }
             );
           }
           break;
         case "News feed":
           {
             await Newsfeed.update(
-              { where: { id: c.id } },
-              { position: c.postion }
+              { position: c.position },
+              { where: { id: c.id } }
             );
           }
           break;
         case "Todo List":
           {
-            await Todo.update({ where: { id: c.id } }, { position: c.postion });
+            await Todo.update(
+              { position: c.position },
+              { where: { id: c.id } }
+            );
           }
           break;
         case "Weather":
           {
             await Weather.update(
-              { where: { id: c.id } },
-              { position: c.postion }
+              { position: c.position },
+              { where: { id: c.id } }
             );
           }
           break;
         case "Forecast":
           {
             await Weatherforecast.update(
-              { where: { id: c.id } },
-              { position: c.postion }
+              { position: c.position },
+              { where: { id: c.id } }
             );
           }
           break;
@@ -251,7 +269,7 @@ const UserController = () => {
       }
     }
 
-    res.status(200).json(components);
+    res.status(200).json("update position");
   };
   const test = async (req, res) => {
     var newsfeed = await Newsfeed.findOne({ where: { userid: 11 } });
@@ -276,6 +294,7 @@ const UserController = () => {
   return {
     register,
     login,
+    refreshLogin,
     editProfile,
     getComponents,
     getActiveComponents,

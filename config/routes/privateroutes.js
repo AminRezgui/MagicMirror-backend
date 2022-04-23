@@ -2,7 +2,7 @@ const privateRoutes = {
   /*--------------------UserController-------------------- */
   "GET /getcomponents": "UserController.getComponents",
   "GET /getactivecomponents": "UserController.getActiveComponents",
-  "GET /updatepositions": "UserController.updatePositions",
+  "PUT /updatepositions": "UserController.updatePositions",
   "PUT /editProfile": "UserController.editProfile",
   "GET /test": "UserController.test",
 
