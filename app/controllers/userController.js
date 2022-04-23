@@ -154,6 +154,11 @@ const UserController = () => {
     }
 
     if (!!body.email) {
+      try {
+        const emailexist = User.findOne({ where: { email: body.email } });
+      } catch (e) {
+        return res.status(203).json("email already exist");
+      }
       if (bcryptService().comparePassword(body.password, user.password)) {
         user.update({
           email: body.email,
