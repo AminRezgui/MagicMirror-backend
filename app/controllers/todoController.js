@@ -35,7 +35,19 @@ const TodoController = () => {
         periodicity: body.periodicity,
         active: body.active,
       });
-      res.status(200).json(todo);
+      var listUpdated = [];
+      body.list.map(async (todoelement) => {
+        const todoel = Todoelement.update(
+          {
+            name: todoelement.name,
+            deadline: todoelement.deadline,
+            done: todoelement.done,
+          },
+          { where: { todoid: todo.id } }
+        );
+        listUpdated.push(todoel);
+      });
+      res.status(200).json({ ...todo, list: listUpdated });
     } catch (e) {
       res.status(400).json("bad request: user not found");
     }

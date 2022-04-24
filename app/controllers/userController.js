@@ -57,7 +57,7 @@ const UserController = () => {
         });
         await Calendar.create({
           name: "Calendar",
-          position: "bottom_right",
+          position: "middle_right",
           country: "Tunis",
           active: true,
           userid: id_user,
@@ -88,7 +88,7 @@ const UserController = () => {
           position: "middle_right",
           active: false,
           location: "Ariana, Tunisia", //body.position
-          numberofdayes: 3,
+          numberofdays: 3,
           colored: true,
           userid: id_user,
         });
