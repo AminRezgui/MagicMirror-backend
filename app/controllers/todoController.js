@@ -49,7 +49,6 @@ const TodoController = () => {
         console.log("aaa : ", todoel.dataValues);
         listUpdated.push(todoel);
         if (i == body.list.length) {
-          console.log("bbb : ", listUpdated);
           res.status(200).json({ ...todo.dataValues, list: listUpdated });
         }
       });

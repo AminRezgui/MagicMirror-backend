@@ -12,6 +12,7 @@ const privateRoutes = {
 
   /*--------------------ComplimentsController-------------------- */
   "GET /getcompliments": "ComplimentsController.getComplimentskByUser",
+  "PUT /updatecompliments": "ComplimentsController.updateCompliments",
 
   /*--------------------NewsfeedController-------------------- */
   "GET /getnewsfeed": "NewsfeedController.getNewsfeedByUser",

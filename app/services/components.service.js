@@ -1,3 +1,4 @@
+const Calendar = require("../models/Calendar");
 const Clock = require("../models/Clock");
 const Complements = require("../models/Complements");
 const Newsfeed = require("../models/Newsfeed");
@@ -19,6 +20,8 @@ const componentsService = () => {
     components.push(todo);
     const weather = await Weather.findOne({ where: { userid: userId } });
     components.push(weather);
+    const calendar = await Calendar.findOne({ where: { userid: userId } });
+    components.push(calendar);
     const weatherforecast = await Weatherforecast.findOne({
       where: { userid: userId },
     });
