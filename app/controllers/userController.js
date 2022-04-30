@@ -18,6 +18,7 @@ const jwt_decode = require("jwt-decode");
 const UserController = () => {
   const register = async (req, res) => {
     const { body } = req;
+    console.log("\n\n Register Body", body)
     const { error } = userValidation.registerValidation(body);
     if (error) return res.status(400).json(error);
     const userExist = await User.findOne({
@@ -234,7 +235,7 @@ const UserController = () => {
             );
           }
           break;
-        case "News feed":
+        case "News Feed":
           {
             await Newsfeed.update(
               { position: c.position },
