@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./app/app.js"
+    "start": "node ./app/app.js",
+    "dev": "nodemon ./app/app.js"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
@@ -24,6 +25,7 @@
     "nodemon": "^2.0.15",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.17.0"
+    "sequelize": "^6.17.0",
+    "socket.io": "^4.5.0"
   }
 }

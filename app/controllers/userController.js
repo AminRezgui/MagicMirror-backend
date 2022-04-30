@@ -51,13 +51,13 @@ const UserController = () => {
         });
         await Complements.create({
           name: "Compliments",
-          position: "top_left",
-          active: false,
+          position: "top_center",
+          active: true,
           userid: id_user,
         });
         await Calendar.create({
           name: "Calendar",
-          position: "middle_right",
+          position: "top_right",
           country: "Tunis",
           active: true,
           userid: id_user,
@@ -71,14 +71,14 @@ const UserController = () => {
         });
         await Todo.create({
           name: "Todo List",
-          position: "top_right",
+          position: "middle_left",
           active: true,
           periodicity: 1,
           userid: id_user,
         });
         await Weather.create({
           name: "Weather",
-          position: "middle_left",
+          position: "middle_center",
           active: true,
           location: "Arian, Tunisia", //body.location
           userid: id_user,
@@ -86,7 +86,7 @@ const UserController = () => {
         await Weatherforecast.create({
           name: "Forecast",
           position: "middle_right",
-          active: false,
+          active: true,
           location: "Ariana, Tunisia", //body.position
           numberofdays: 3,
           colored: true,

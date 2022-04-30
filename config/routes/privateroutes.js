@@ -10,6 +10,9 @@ const privateRoutes = {
   "GET /getclock": "ClockController.getClockByUser",
   "PUT /updateclock": "ClockController.updateClock",
 
+  /*--------------------ComplimentsController-------------------- */
+  "GET /getcompliments": "ComplimentsController.getComplimentskByUser",
+
   /*--------------------NewsfeedController-------------------- */
   "GET /getnewsfeed": "NewsfeedController.getNewsfeedByUser",
   "PUT /updatenewsfeed": "NewsfeedController.updateNewsfeed",

@@ -28,26 +28,31 @@ const TodoController = () => {
   const updateTodo = async (req, res) => {
     const { body } = req;
     try {
-      console.log(body);
       const todo = await Todo.findByPk(body.id);
 
       await todo.update({
         periodicity: body.periodicity,
         active: body.active,
       });
+      await Todoelement.destroy({ where: { todoid: todo.id } });
+
       var listUpdated = [];
+      var i = 0;
       body.list.map(async (todoelement) => {
-        const todoel = Todoelement.update(
-          {
-            name: todoelement.name,
-            deadline: todoelement.deadline,
-            done: todoelement.done,
-          },
-          { where: { todoid: todo.id } }
-        );
+        const todoel = await Todoelement.create({
+          name: todoelement.name,
+          deadline: todoelement.deadline,
+          done: todoelement.done,
+          todoid: todo.id,
+        });
+        i++;
+        console.log("aaa : ", todoel.dataValues);
         listUpdated.push(todoel);
+        if (i == body.list.length) {
+          console.log("bbb : ", listUpdated);
+          res.status(200).json({ ...todo.dataValues, list: listUpdated });
+        }
       });
-      res.status(200).json({ ...todo, list: listUpdated });
     } catch (e) {
       res.status(400).json("bad request: user not found");
     }
